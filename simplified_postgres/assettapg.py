@@ -7,12 +7,11 @@ def selector(cursor, command, table):
         results = cursor.fetchall()
         return results
     elif command == 'headers':
-        cursor.execute("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = '{0}';".format(table))
+        cursor.execute("SELECT COLUMN_NAME FROM information_schema.COLUMNS ",
+                       "WHERE TABLE_NAME = '{0}';".format(table))
         results = cursor.fetchall()
         list = results
-        appendable_headers = []
-        for header in list:
-            appendable_headers.append(header[0])
+        appendable_headers = [header[0] for header in list]
         return appendable_headers
 
 
@@ -27,7 +26,8 @@ def get_all_data(cursor, table):
 
 def active_listings(cursor, account):
     if account != 'all':
-        cursor.execute("SELECT * FROM equipment_listings where account_id = {0} and quantity > 0;".format(account))
+        cursor.execute("SELECT * FROM equipment_listings where account_id ",
+                       "= {0} and quantity > 0;".format(account))
         records = cursor.fetchall()
         df = pd.DataFrame(records)
         try:
